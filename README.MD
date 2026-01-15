@@ -39,9 +39,4 @@ To maintain message ordering while using the power of Virtual Threads, we implem
 
 ### Prerequisites
 * JDK 25
-* Docker (for NATS and Redis)
-
-### Running the Services
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/your-username/chess-backend-loom.git](https://github.com/your-username/chess-backend-loom.git)
+* Docker (for NATS)
