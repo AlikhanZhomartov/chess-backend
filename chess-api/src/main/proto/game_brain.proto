@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package chess.game.v1;
+
+option java_package = "io.github.alikhanzhomartov.grpc";
+option java_outer_classname = "GameBrainProto";
+
+service GameBrainService {
+  rpc MakeMove (MakeMoveRequest) returns (MakeMoveResponse);
+
+  rpc GetGameState (GetGameStateRequest) returns (GetGameStateResponse);
+}
+
+message GameState {
+  string game_id = 1;
+  string fen = 2;
+  int32 move_ply = 3;
+  int64 white_time_ms = 4;
+  int64 black_time_ms = 5;
+  GameStatus status = 6;
+  GameEndReason end_reason = 7;
+  bool is_white_turn = 8;
+}
+
+enum GameStatus {
+  GAME_STATUS_UNSPECIFIED = 0;
+  GAME_STATUS_ACTIVE = 1;
+  GAME_STATUS_COMPLETED = 2;
+  GAME_STATUS_ABORTED = 3;
+}
+
+enum GameEndReason {
+  GAME_END_REASON_UNSPECIFIED = 0;
+  GAME_END_REASON_NONE = 1;
+  GAME_END_REASON_CHECKMATE = 2;
+  GAME_END_REASON_STALEMATE = 3;
+  GAME_END_REASON_TIMEOUT = 4;
+  GAME_END_REASON_RESIGNATION = 5;
+}
+
+enum MoveInvalidReason {
+  MOVE_INVALID_REASON_UNSPECIFIED = 0;
+  MOVE_INVALID_REASON_NONE = 1;
+  MOVE_INVALID_REASON_NOT_YOUR_TURN = 2;
+  MOVE_INVALID_REASON_GAME_OVER = 3;
+  MOVE_INVALID_REASON_PIECE_PINNED = 4;
+  MOVE_INVALID_REASON_KING_IN_CHECK = 5;
+  MOVE_INVALID_REASON_INVALID_PATTERN = 6;
+  MOVE_INVALID_REASON_TARGET_OCCUPIED = 7;
+  MOVE_INVALID_REASON_NO_SUCH_PIECE = 8;
+}
+
+message MakeMoveRequest {
+  string game_id = 1;
+  string user_id = 2;
+  string move_uci = 3;
+  string request_id = 4;
+}
+
+message MakeMoveResponse {
+  bool success = 1;
+  MoveInvalidReason invalid_reason = 2;
+  GameState game_state = 3;
+}
+
+message GetGameStateRequest {
+  string game_id = 1;
+  string user_id = 2;
+}
+
+message GetGameStateResponse {
+  GameState game_state = 1;
+}
